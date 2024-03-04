@@ -74,6 +74,10 @@ Eles são utilizados para tratar solicitações HTTP antes de serem passadas par
 Testes Automatizados
 Os testes automatizados são escritos usando o framework Jest e são definidos na pasta test/. Eles abrangem tanto os testes unitários quanto os testes de integração para garantir a qualidade do código.
 
+Banco de Dados
+
+Foi escolhido o Postegresql por sua versatilidade, entregando escabilidade.
+
 Executando a Aplicação
 
 Para executar a aplicação localmente, siga estas etapas:

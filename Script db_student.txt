@@ -1,0 +1,95 @@
+-- Database: db_student
+
+-- DROP DATABASE IF EXISTS db_student;
+
+CREATE DATABASE db_student
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Portuguese_Brazil.1252'
+    LC_CTYPE = 'Portuguese_Brazil.1252'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+GRANT TEMPORARY, CONNECT ON DATABASE db_student TO PUBLIC;
+
+GRANT ALL ON DATABASE db_student TO postgres WITH GRANT OPTION;
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres REVOKE ALL ON TABLES FROM postgres;
+
+ALTER DEFAULT PRIVILEGES FOR ROLE postgres
+GRANT ALL ON TABLES TO postgres WITH GRANT OPTION;
+
+CREATE TABLE tb_description (id_table_description BIGSERIAL NOT NULL, description varchar(80) NOT NULL, PRIMARY KEY (id_table_description));
+CREATE TABLE tb_description_content (id_table_description_content BIGSERIAL NOT NULL, id_table_description int8 NOT NULL, description varchar(80) NOT NULL, complement varchar(20) NOT NULL, PRIMARY KEY (id_table_description_content));
+CREATE TABLE tb_educational_institution (id_educational_institution BIGSERIAL NOT NULL, description varchar(200) NOT NULL, PRIMARY KEY (id_educational_institution));
+CREATE TABLE tb_permission (id_permission SERIAL NOT NULL, id_educational_institution int8 NOT NULL, id_user int8 NOT NULL, id_route int4 NOT NULL, PRIMARY KEY (id_permission));
+CREATE TABLE tb_ra_educational_institution (id_ra_educational_institution BIGSERIAL NOT NULL, id_educational_institution int8 NOT NULL, RA varchar(20) NOT NULL, PRIMARY KEY (id_ra_educational_institution));
+CREATE TABLE tb_route (id_route SERIAL NOT NULL, id_method_type int8 NOT NULL, route varchar(244) NOT NULL, active bool NOT NULL, PRIMARY KEY (id_route));
+CREATE TABLE tb_student (id_student SERIAL NOT NULL, id_user int8 NOT NULL, id_ra int8 NOT NULL, PRIMARY KEY (id_student));
+CREATE TABLE tb_user (id_user BIGSERIAL NOT NULL, id_user_type int8 NOT NULL, "user" varchar(40) NOT NULL, password varchar(500) NOT NULL, name varchar(500) NOT NULL, email varchar(244) NOT NULL, phonenumber varchar(14) NOT NULL, cpf varchar(11) NOT NULL, active bool NOT NULL, PRIMARY KEY (id_user));
+CREATE UNIQUE INDEX tb_ra_educational_institution_unique_index ON tb_ra_educational_institution (id_educational_institution, RA);
+ALTER TABLE tb_student ADD CONSTRAINT FKtb_student407749 FOREIGN KEY (id_ra) REFERENCES tb_ra_educational_institution (id_ra_educational_institution);
+ALTER TABLE tb_ra_educational_institution ADD CONSTRAINT FKtb_ra_educ383140 FOREIGN KEY (id_educational_institution) REFERENCES tb_educational_institution (id_educational_institution);
+ALTER TABLE tb_user ADD CONSTRAINT FKtb_user283760 FOREIGN KEY (id_user_type) REFERENCES tb_description_content (id_table_description_content);
+ALTER TABLE tb_permission ADD CONSTRAINT FKtb_permiss135525 FOREIGN KEY (id_user) REFERENCES tb_user (id_user);
+ALTER TABLE tb_student ADD CONSTRAINT FKtb_student584799 FOREIGN KEY (id_user) REFERENCES tb_user (id_user);
+ALTER TABLE tb_permission ADD CONSTRAINT FKtb_permiss581700 FOREIGN KEY (id_educational_institution) REFERENCES tb_educational_institution (id_educational_institution);
+ALTER TABLE tb_permission ADD CONSTRAINT FKtb_permiss14241 FOREIGN KEY (id_route) REFERENCES tb_route (id_route);
+ALTER TABLE tb_route ADD CONSTRAINT FKtb_route629663 FOREIGN KEY (id_method_type) REFERENCES tb_description_content (id_table_description_content);
+ALTER TABLE tb_description_content ADD CONSTRAINT FKtb_descrip31922 FOREIGN KEY (id_table_description) REFERENCES tb_description (id_table_description);
+
+INSERT INTO public.tb_description(description)	VALUES ('Tipo de usuário');	
+INSERT INTO public.tb_description(description)	VALUES ('Métodos REST');
+
+INSERT INTO public.tb_description_content(id_table_description, escription)	VALUES (1,'Administrador');	
+INSERT INTO public.tb_description_content(id_table_description, description) VALUES (1,'Aluno');
+INSERT INTO public.tb_description_content(id_table_description, description) VALUES (2,'delete');
+INSERT INTO public.tb_description_content(id_table_description, description) VALUES (2,'get');
+INSERT INTO public.tb_description_content(id_table_description, description) VALUES (2,'post');
+INSERT INTO public.tb_description_content(id_table_description, description) VALUES (2,'put');
+INSERT INTO public.tb_description_content(id_table_description, description) VALUES (2,'path');
+
+INSERT INTO public.tb_user(	id_user_type, password, name, email, phonenumber, cpf, active)
+VALUES (1, 'E8DE012B65F7ADA025B5FF1DF3330E6329A3EA8B9C643DF14DE9C1B1A288E39A', 'Teste 1', 'teste@gmail.com', '34999996666', 01968670025, true);
+
+	
+INSERT INTO public.tb_educational_institution(description)
+VALUES ( 'PUC');	
+INSERT INTO public.tb_educational_institution(description)
+VALUES ( 'UNIPAM');
+
+
+/*
+
+INSERT INTO public.tb_route( id_method_type, route, active)
+VALUES ( ?, '/v1/users', true);
+INSERT INTO public.tb_route( id_method_type, route, active)
+VALUES ( ?, '/v1/typeUser', true);
+INSERT INTO public.tb_route( id_method_type, route, active)
+VALUES ( ?, '/v1/educationalInstitution', true);
+INSERT INTO public.tb_route( id_method_type, route, active)
+VALUES ( ?, '/v1/users', true);
+INSERT INTO public.tb_route( id_method_type, route, active)
+VALUES ( ?, '/v1/users/:idUser', true);
+INSERT INTO public.tb_route( id_method_type, route, active)
+VALUES ( ?, '/v1/users/:idUser', true);
+
+
+INSERT INTO public.tb_permission(id_educational_institution, id_user, id_route)
+VALUES ( 1, 1, 1);
+INSERT INTO public.tb_permission(id_educational_institution, id_user, id_route)
+VALUES ( 1, 1, 2);
+INSERT INTO public.tb_permission(id_educational_institution, id_user, id_route)
+VALUES ( 1, 1, 3);
+INSERT INTO public.tb_permission(id_educational_institution, id_user, id_route)
+VALUES ( 1, 1, 4);
+INSERT INTO public.tb_permission(id_educational_institution, id_user, id_route)
+VALUES ( 1, 1, 5);
+INSERT INTO public.tb_permission(id_educational_institution, id_user, id_route)
+VALUES ( 1, 1, 6;
+
+
+*/
